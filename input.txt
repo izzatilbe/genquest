@@ -1,0 +1,9 @@
+Agile software development is an approach to
+software development under which 
+equirements and solutions evolve through the
+collaborative effort of self-organizing and cross-functional teams
+and their end users.
+
+Bloom's Taxonomy is a set of three hierarchical models used to classify educational learning objectives into levels of complexity and specificity. 
+
+Python is an interpreted, high-level, general-purpose programming language.

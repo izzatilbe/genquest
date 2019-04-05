@@ -8,13 +8,14 @@ def parse(string):
     """
     Parse a paragraph. Devide it into sentences and try to generate quesstions from each sentences.
     """
-    
+    output = []
     try:
         txt = TextBlob(string)
         # Each sentence is taken from the string input and passed to genQuestion() to generate questions.
         for sentence in txt.sentences:
-            genQuestion(sentence)
+            output = genQuestion(sentence)
 
+        return output
     except Exception as e:
         raise e
 
@@ -61,90 +62,59 @@ def genQuestion(line):
     # Create a list of tag-combination
 
     l1 = ['NNP', 'VBG', 'VBZ', 'IN']
-    l2 = ['NNP', 'VBG', 'VBZ']
-    
-
     l3 = ['PRP', 'VBG', 'VBZ', 'IN']
     l4 = ['PRP', 'VBG', 'VBZ']
-    l5 = ['PRP', 'VBG', 'VBD']
-    l6 = ['NNP', 'VBG', 'VBD']
-    l7 = ['NN', 'VBG', 'VBZ']
-
     l8 = ['NNP', 'VBZ', 'JJ']
     l9 = ['NNP', 'VBZ', 'NN']
-
     l10 = ['NNP', 'VBZ']
-    l11 = ['PRP', 'VBZ']
-    l12 = ['NNP', 'NN', 'IN']
-    l13 = ['NN', 'VBZ']
 
-
+    output = []
+ 
     # With the use of conditional statements the dictionary is compared with the list created above
     #Understanding - Explain, Distinguish, Predict
     
     if all(key in  bucket for key in l1): #'NNP', 'VBG', 'VBZ', 'IN' in sentence.
         question = 'How' + ' ' + line.words[bucket['VBZ']] +' '+ line.words[bucket['NNP']]+ ' ' + line.words[bucket['VBG']] + '?'
-   
-    elif all(key in  bucket for key in l2): #'NNP', 'VBG', 'VBZ' in sentence.
-        question = 'Who' + ' ' + line.words[bucket['VBZ']] +' '+ line.words[bucket['NNP']] +' '+ line.words[bucket['VBG']] + '?'
-    
-    elif all(key in  bucket for key in l3): #'PRP', 'VBG', 'VBZ', 'IN' in sentence.
-        question = 'What' + ' ' + line.words[bucket['VBZ']] +' '+ line.words[bucket['PRP']]+ ' '+ line.words[bucket['VBG']] + '?'
-
-    elif all(key in  bucket for key in l4): #'PRP', 'VBG', 'VBZ' in sentence.
-        question = 'What ' + line.words[bucket['PRP']] +' '+  ' does ' + line.words[bucket['VBG']]+ ' '+  line.words[bucket['VBG']] + '?'
-
-    elif all(key in  bucket for key in l7): #'NN', 'VBG', 'VBZ' in sentence.
-        question = 'What' + ' ' + line.words[bucket['VBZ']] + + 'the difference between' +' '+ line.words[bucket['NN']] +' '+ line.words[bucket['VBG']] + '?'
-
-    elif all(key in bucket for key in l8): #'NNP', 'VBZ', 'JJ' in sentence.
-        question = 'How' + ' ' + line.words[bucket['VBZ']] + ' ' + line.words[bucket['NNP']] + ' ' + line.words[bucket['JJ']] + '?'
-
-    elif all(key in bucket for key in l9): #'NNP', 'VBZ', 'NN' in sentence
-        question = 'How' + ' ' + line.words[bucket['VBZ']] + ' ' + line.words[bucket['NNP']] + 'work' +'?'
-
-    elif all(key in bucket for key in l11): #'PRP', 'VBZ' in sentence.
-        if line.words[bucket['PRP']] in ['she','he']:
-            question = 'What' + ' does ' + line.words[bucket['PRP']].lower() + ' ' + line.words[bucket['VBZ']].singularize() + '?'
-
-    elif all(key in bucket for key in l10): #'NNP', 'VBZ' in sentence.
-        question = 'What' + ' was ' + line.words[bucket['NNP']] + ' ' + line.words[bucket['VBZ']].singularize() + '?'
-
-    elif all(key in bucket for key in l13): #'NN', 'VBZ' in sentence.
-        question = 'Who do you think' + ' ' + line.words[bucket['VBZ']] + ' ' + line.words[bucket['NN']] + '?'
-
-    # When the tags are generated 's is split to ' and s. To overcome this issue.
-    if 'VBZ' in bucket and line.words[bucket['VBZ']] == "’":
-        question = question.replace(" ’ ","'s ")
-
-    # Print the genetated questions as output.
-    if question != '':
         print('\n', 'Question: ' + question )
-   
+        output.append(question)
+    
+    if all(key in  bucket for key in l3): #'PRP', 'VBG', 'VBZ', 'IN' in sentence.
+        question = 'What' + ' ' + line.words[bucket['VBZ']] +' '+ line.words[bucket['PRP']]+ ' '+ line.words[bucket['VBG']] + '?'
+        print('\n', 'Question: ' + question )
+        output.append(question)
 
-def main():  
+    if all(key in  bucket for key in l4): #'PRP', 'VBG', 'VBZ' in sentence.
+        question = 'What ' + line.words[bucket['PRP']] +' '+  ' does ' + line.words[bucket['VBG']]+ ' '+  line.words[bucket['VBG']] + '?'
+        print('\n', 'Question: ' + question )
+        output.append(question)
+
+    if all(key in bucket for key in l8): #'NNP', 'VBZ', 'JJ' in sentence.
+        question = 'How' + ' ' + line.words[bucket['VBZ']] + ' ' + line.words[bucket['NNP']] + ' ' + line.words[bucket['JJ']] + '?'
+        print('\n', 'Question: ' + question )
+        output.append(question)
+
+    if all(key in bucket for key in l9): #'NNP', 'VBZ', 'NN' in sentence
+        question = 'How does' + ' ' + line.words[bucket['NNP']] + ' work' +'?'
+        print('\n', 'Question: ' + question )
+        output.append(question)
+
+    return output
+
+
+def main(textinput):  
     """
     Accepts a text file as an argument and generates questions from it.
     """
     #verbose mode is activated when we give -v as argument.
     global verbose 
-    verbose = False
+    verbose = True
 
-    # Set verbose if -v option is given as argument.
-    if len(sys.argv) >= 3: 
-        if sys.argv[2] == '-v':
-            print('Verbose Mode Activated\n')
-            verbose = True
-
-    # Open the file given as argument in read-only mode.
-    filehandle = open(sys.argv[1], 'r')
-    textinput = filehandle.read()
     print('\n-----------INPUT TEXT-------------\n')
     print(textinput,'\n')
     print('\n-----------INPUT END---------------\n')
 
     # Send the content of text file as string to function parse()
-    parse(textinput)
+    return parse(textinput)
 
 if __name__ == "__main__":
-main()
+    main()
